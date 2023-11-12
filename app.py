@@ -1,5 +1,5 @@
 import toml
-from flask import Flask
+from flask import Flask, render_template
 from makerbase import MakerBase
 
 with open('config.toml', 'r', encoding='utf-8') as fp:
@@ -8,6 +8,11 @@ with open('config.toml', 'r', encoding='utf-8') as fp:
 app = Flask(__name__)
 db = MakerBase(config)
 
+
+######Start Page#############
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 ########## Drawers #############
 @app.route('/search_drawer/<drawer_name>', methods=['GET'])
