@@ -1,5 +1,5 @@
 import toml
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from makerbase import MakerBase
 
 with open('config.toml', 'r', encoding='utf-8') as fp:
@@ -9,10 +9,25 @@ app = Flask(__name__)
 db = MakerBase(config)
 
 
+def shutdown_server():
+    func = request.environ.get('werkzeung.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeung Server')
+    func()
+
 ######Start Page#############
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/About')
+def About():
+    return render_template("about.html")
+
+@app.get('/shutdown')
+def shutdown():
+    shutdown_server()
+    return 'Server shutting down...'
 
 ########## Drawers #############
 @app.route('/search_drawer/<drawer_name>', methods=['GET'])
